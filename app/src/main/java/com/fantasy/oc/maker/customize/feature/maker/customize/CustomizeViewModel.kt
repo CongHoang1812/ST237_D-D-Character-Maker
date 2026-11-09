@@ -570,7 +570,7 @@ class CustomizeViewModel @Inject constructor(
         const val KEY_REMAINING = "cosplay_remaining"
         const val KEY_SCORE = "cosplay_score"
         const val KEY_RESULT_PATH = "cosplay_result_path"
-        const val COSPLAY_SECONDS = 60
+        const val COSPLAY_SECONDS = 10*60
         const val COMPLETE_PERCENT = 100
         const val TICK_MS = 1_000L
         const val STOP_TIMEOUT_MS = 5_000L
