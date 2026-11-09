@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Không backup cài đặt: cài lại app phải bắt đầu từ onboarding (splash -> language) -->
+<full-backup-content>
+    <exclude domain="file" path="datastore/" />
+</full-backup-content>

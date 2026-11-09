@@ -1,0 +1,27 @@
+# Keep rule cho R8 (AGP gộp mọi file trong src/main/keepRules). Xem https://d.android.com/r/tools/r8/keep-rules
+#
+# Luật viết theo đuôi package (`**.data.model.**`), không ghi package đầy đủ, để app tạo bằng new_app.py
+# hoặc đổi package bằng tay vẫn đúng mà không phải sửa file này.
+#
+# Lý do: Gson đọc / ghi JSON theo TÊN FIELD qua reflection. R8 đổi tên field thành a, b, c thì:
+#   - JSON server đọc sai (DTO),
+#   - JSON đã lưu trên máy người dùng (cấu hình nhân vật để Edit, dữ liệu editor) không đọc lại được.
+# Class mới nào đi qua Gson thì đặt trong data/model/ hoặc data/remote/dto/, hoặc thêm vào cuối file này.
+
+# Gson cần kiểu generic của field (Map<String, PartSelection>...) và annotation @SerializedName.
+-keepattributes Signature, InnerClasses, EnclosingMethod, *Annotation*
+
+# 1. JSON từ server (Retrofit + Gson).
+-keep class **.data.remote.dto.** { <fields>; <init>(...); }
+
+# 2. Domain model Gson lưu vào Room / SavedStateHandle / truyền qua navigation:
+#    CharacterConfig, PartSelection, CharacterTransform (Edit ở My creation), CosplayChallenge...
+#    Enum trong package này (CreationType lưu trong Room theo tên) cũng được giữ nguyên tên.
+-keep class **.data.model.** { <fields>; <init>(...); }
+
+# 3. Dữ liệu Decor editor lưu JSON trong SavedStateHandle (EditorTab còn là key của Map).
+-keep class **.feature.decor.editor.EditorData,
+            **.feature.decor.editor.DecorElement,
+            **.feature.decor.editor.DecorBackground,
+            **.feature.decor.editor.EditorTab,
+            **.feature.decor.editor.ElementType { <fields>; <init>(...); }

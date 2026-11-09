@@ -1,0 +1,11 @@
+# Repo dùng chung giữa Windows và Linux: git lưu LF, file nào cần kiểu xuống dòng riêng thì cố định ở đây.
+* text=auto
+
+# Script shell phải là LF, nếu không Linux báo `$'\r': command not found`.
+gradlew text eol=lf
+*.sh    text eol=lf
+*.py    text eol=lf
+
+# Script Windows giữ CRLF.
+*.bat   text eol=crlf
+*.cmd   text eol=crlf

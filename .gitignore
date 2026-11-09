@@ -1,0 +1,23 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+.kotlin
+
+# Cấu hình JDK của Android Studio, khác nhau giữa máy Windows và Linux
+/.idea/misc.xml
+
+# Chứa API key của Firebase, không đưa lên git
+/app/google-services.json
+/app/release/

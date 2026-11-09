@@ -1,0 +1,49 @@
+package com.fantasy.oc.maker.customize.core.common
+
+import android.content.res.Configuration
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.ConfigurationCompat
+import androidx.core.os.LocaleListCompat
+import com.fantasy.oc.maker.customize.R
+
+/** Ngôn ngữ app hỗ trợ, theo thứ tự hiển thị trong Figma. */
+enum class AppLanguage(val code: String, @param:StringRes val nameRes: Int, @param:DrawableRes val flagRes: Int) {
+    HINDI("hi", R.string.language_hindi, R.drawable.ic_flag_hi),
+    SPANISH("es", R.string.language_spanish, R.drawable.ic_flag_es),
+    FRENCH("fr", R.string.language_french, R.drawable.ic_flag_fr),
+    ENGLISH("en", R.string.language_english, R.drawable.ic_flag_en),
+    PORTUGUESE("pt", R.string.language_portuguese, R.drawable.ic_flag_pt),
+    INDONESIAN("in", R.string.language_indonesian, R.drawable.ic_flag_in);
+
+    companion object {
+        val DEFAULT = ENGLISH
+
+        /** "id" (mã mới của tiếng Indonesia) -> "in" (mã resource values-in). */
+        fun fromCode(code: String?): AppLanguage? {
+            val normalized = code?.substringBefore('-')?.substringBefore('_')?.lowercase()
+                ?.let { if (it == "id") "in" else it }
+            return entries.firstOrNull { it.code == normalized }
+        }
+
+        /** Ngôn ngữ app đang dùng (nếu đã chọn), ngược lại ngôn ngữ máy nếu hỗ trợ, cuối cùng English. */
+        fun current(): AppLanguage {
+            val appLocales = AppCompatDelegate.getApplicationLocales()
+            val locale = if (!appLocales.isEmpty) appLocales[0] else LocaleListCompat.getAdjustedDefault()[0]
+            return fromCode(locale?.language) ?: DEFAULT
+        }
+
+        /** Ngôn ngữ chính của [configuration], null nếu app không hỗ trợ. */
+        fun from(configuration: Configuration): AppLanguage? =
+            fromCode(ConfigurationCompat.getLocales(configuration)[0]?.language)
+
+        /**
+         * Áp ngôn ngữ cho app. MainActivity khai báo configChanges nên không bị recreate: chỉ nhận
+         * onConfigurationChanged, màn inflate sau đó mới có chữ theo ngôn ngữ mới.
+         */
+        fun apply(language: AppLanguage) {
+            AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(language.code))
+        }
+    }
+}
